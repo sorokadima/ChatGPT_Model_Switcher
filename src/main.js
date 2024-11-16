@@ -56,11 +56,12 @@ const MODELS_API_URL = '/backend-api/models'
 async function handleModelsApi(fetchPromise) {
   return fetchPromise.then(async (response) => {
     if (response.ok) {
-      const data = await response.clone().json()
-      models.update(data.models)
+      const data = await response.clone().json();
+      console.log('SSE Event Data:', data); // Log the SSE event data
+      models.update(data.models);
     }
-    return response
-  })
+    return response;
+  });
 }
 
 window.fetch = new Proxy(window.fetch, {
