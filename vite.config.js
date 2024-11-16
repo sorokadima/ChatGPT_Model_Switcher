@@ -17,8 +17,8 @@ export default defineConfig({
           'zh-CN': 'ChatGPT 模型切换器（支持 GPT-4 Mobile 及所有可用模型）',
           'zh-TW': 'ChatGPT 模型切换器（支持 GPT-4 Mobile 及所有可用模型）'
         },
-        namespace: 'https://github.com/hydrotho/ChatGPT_Model_Switcher',
-        copyright: '2023, Hydrotho (https://github.com/hydrotho)',
+        namespace: 'https://github.com/sorokadima/ChatGPT_Model_Switcher',
+        copyright: '2023, Hydrotho (https://github.com/sorokadima)',
         version: '2.4.0',
         description: {
           '': 'Use the GPT-4 Mobile model on the ChatGPT web interface. It also provides the ability to switch to other models for added flexibility. Generally, this script does not conflict with other popular ChatGPT scripts.',
@@ -38,10 +38,10 @@ export default defineConfig({
         match: ['http*://chat.openai.com/*', 'http*://chatgpt.com/*'],
         'run-at': 'document-start',
         updateURL:
-          'https://raw.githubusercontent.com/hydrotho/ChatGPT_Model_Switcher/main/dist/chatgpt-model-switcher.user.js',
+          'https://raw.githubusercontent.com/sorokadima/ChatGPT_Model_Switcher/main/dist/chatgpt-model-switcher.user.js',
         downloadURL:
-          'https://raw.githubusercontent.com/hydrotho/ChatGPT_Model_Switcher/main/dist/chatgpt-model-switcher.user.js',
-        supportURL: 'https://github.com/hydrotho/ChatGPT_Model_Switcher/issues',
+          'https://raw.githubusercontent.com/sorokadima/ChatGPT_Model_Switcher/main/dist/chatgpt-model-switcher.user.js',
+        supportURL: 'https://github.com/sorokadima/ChatGPT_Model_Switcher/issues',
         license: 'MIT'
       },
       build: {

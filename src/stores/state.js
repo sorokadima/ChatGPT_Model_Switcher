@@ -1,6 +1,6 @@
 import { reactive, watch } from 'vue'
 
-const LOCAL_STORAGE_KEY = 'github.com/hydrotho/ChatGPT_Model_Switcher'
+const LOCAL_STORAGE_KEY = 'github.com/sorokadima/ChatGPT_Model_Switcher'
 
 function getInitialState() {
   const defaultState = {

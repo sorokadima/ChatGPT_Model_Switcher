@@ -18,18 +18,18 @@ ChatGPT 模型切换器是一个用户脚本，允许用户在 ChatGPT 网页端
 ## 安装
 
 1. 安装一个用户脚本管理器，如 [Tampermonkey](https://www.tampermonkey.net/)。
-2. 点击 [此处](https://raw.githubusercontent.com/hydrotho/ChatGPT_Model_Switcher/main/dist/chatgpt-model-switcher.user.js) 安装脚本。
+2. 点击 [此处](https://raw.githubusercontent.com/sorokadima/ChatGPT_Model_Switcher/main/dist/chatgpt-model-switcher.user.js) 安装脚本。
 3. 安装后，访问 [ChatGPT](https://chat.openai.com/)，即可使用 "ChatGPT 模型切换器" 愉快地体验 GPT-4 Mobile 模型！
 
 ## 使用
 
 要使用 GPT-4 Mobile 或其他模型，只需在 ChatGPT 网页端右上角的选项中选择所需的模型即可。
 
-![ChatGPT 模型切换器](https://github.com/hydrotho/ChatGPT_Model_Switcher/assets/42911474/75ef5379-b5e4-45ff-8f90-286cfa291881)
+![ChatGPT 模型切换器](https://github.com/sorokadima/ChatGPT_Model_Switcher/assets/42911474/75ef5379-b5e4-45ff-8f90-286cfa291881)
 
 ## 支持
 
-如果您遇到任何问题或有任何建议，欢迎 [提出问题](https://github.com/hydrotho/ChatGPT_Model_Switcher/issues)。
+如果您遇到任何问题或有任何建议，欢迎 [提出问题](https://github.com/sorokadima/ChatGPT_Model_Switcher/issues)。
 
 ## 许可证
 
