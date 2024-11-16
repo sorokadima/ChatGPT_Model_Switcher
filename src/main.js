@@ -67,6 +67,7 @@ window.fetch = new Proxy(window.fetch, {
   apply: async function (target, that, args) {
     let resource = args[0]
     let options = args[1]
+    console.log('*** *** ***   Fetch intercepted', resource, options);
 
     if (state.isEnabled && resource.endsWith(CONVERSATION_API_URL) && options.method === 'POST') {
       const requestBody = JSON.parse(options.body)

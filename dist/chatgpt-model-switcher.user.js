@@ -2255,6 +2255,8 @@
     apply: async function(target, that, args) {
       let resource = args[0];
       let options = args[1];
+      console.log('vvv vvv vvv  Fetch intercepted', resource, options);
+
       if (state.isEnabled && resource.endsWith(CONVERSATION_API_URL) && options.method === "POST") {
         const requestBody = JSON.parse(options.body);
         requestBody.model = state.selectedModelSlug;
