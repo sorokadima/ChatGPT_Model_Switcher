@@ -2246,6 +2246,7 @@
     return fetchPromise.then(async (response) => {
       if (response.ok) {
         const data = await response.clone().json();
+        console.log('SSE Event data:', data); // Log the SSE event data
         models.update(data.models);
       }
       return response;
