@@ -2246,17 +2246,16 @@
     return fetchPromise.then(async (response) => {
       if (response.ok) {
         const data = await response.clone().json();
-        console.log('SSE Event data:', data); // Log the SSE event data
         models.update(data.models);
       }
       return response;
     });
   }
+
   window.fetch = new Proxy(window.fetch, {
     apply: async function(target, that, args) {
       let resource = args[0];
       let options = args[1];
-      console.log('vvv vvv vvv  Fetch intercepted', resource, options);
 
       if (state.isEnabled && resource.endsWith(CONVERSATION_API_URL) && options.method === "POST") {
         const requestBody = JSON.parse(options.body);
@@ -2265,11 +2264,46 @@
         args[0] = resource;
         args[1] = options;
       }
+
       const fetchPromise = Reflect.apply(target, that, args);
-      if (resource.includes(MODELS_API_URL) && options.method === "GET") {
-        return handleModelsApi(fetchPromise);
-      }
-      return fetchPromise;
+
+      // Track the original promise
+      fetchPromise
+        .then(response => {
+          // Clone the response to read the stream without consuming the original
+          const responseClone = response.clone();
+            const reader = responseClone.body.getReader();
+            const decoder = new TextDecoder();
+            let result = '';
+            function read() {
+              reader.read().then(({ done, value }) => {
+                if (done) {
+                  console.log('oStream complete:', result);
+                  return;
+                }
+                result += decoder.decode(value, { stream: true });
+                console.log('oStream chunk:', decoder.decode(value));
+                read();
+              }).catch(error => {
+                console.error('oStream read error:', error);
+              });
+            }
+
+          if (resource === `https://chatgpt.com${CONVERSATION_API_URL}`) {
+            console.log('Conversation API response:', response);
+            read();
+          }
+
+          return response;
+        })
+        .catch(error => {
+          console.error('Fetch error:', error);
+          throw error;
+        });
+
+
+      // Return a copy of the promise
+      return fetchPromise.then(response => response);
     }
   });
 
