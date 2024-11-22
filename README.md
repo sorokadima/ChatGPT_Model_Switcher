@@ -34,3 +34,14 @@ If you encounter any issues or have any suggestions, please [open an issue](http
 ## License
 
 This project is licensed under the MIT License, see the [LICENSE](LICENSE) file for details.
+
+# How to Run project
+
+```
+npm i
+npm run build 
+```
+
+copy dist/chatgpt-model-switcher.user.js
+
+and paste it in tampermonkey chrome-extension://dhdgffkkebhmkfjojejmpbldmpobfkfo/options.html#nav=ba157bde-49e4-4f22-88df-b64d66ccb00b+editor

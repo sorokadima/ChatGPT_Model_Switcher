@@ -64,27 +64,59 @@ async function handleModelsApi(fetchPromise) {
   });
 }
 
+
 window.fetch = new Proxy(window.fetch, {
-  apply: async function (target, that, args) {
-    let resource = args[0]
-    let options = args[1]
-    console.log('*** *** ***   Fetch intercepted', resource, options);
+  apply: async function(target, that, args) {
+    let resource = args[0];
+    let options = args[1];
 
-    if (state.isEnabled && resource.endsWith(CONVERSATION_API_URL) && options.method === 'POST') {
-      const requestBody = JSON.parse(options.body)
-      requestBody.model = state.selectedModelSlug
-
-      options = { ...options, body: JSON.stringify(requestBody) }
-      args[0] = resource
-      args[1] = options
+    if (state.isEnabled && resource.endsWith(CONVERSATION_API_URL) && options.method === "POST") {
+      const requestBody = JSON.parse(options.body);
+      requestBody.model = state.selectedModelSlug;
+      options = { ...options, body: JSON.stringify(requestBody) };
+      args[0] = resource;
+      args[1] = options;
     }
 
-    const fetchPromise = Reflect.apply(target, that, args)
+    const fetchPromise = Reflect.apply(target, that, args);
 
-    if (resource.includes(MODELS_API_URL) && options.method === 'GET') {
-      return handleModelsApi(fetchPromise)
-    }
+    // Track the original promise
+    fetchPromise
+      .then(response => {
+        // Clone the response to read the stream without consuming the original
+        const responseClone = response.clone();
+        const reader = responseClone.body.getReader();
+        const decoder = new TextDecoder();
+        let result = '';
+        function read() {
+          reader.read().then(({ done, value }) => {
+            if (done) {
+              console.log('oStream complete:', result);
+              return;
+            }
+            result += decoder.decode(value, { stream: true });
+            console.log('oStream chunk:', decoder.decode(value));
+            read();
+          }).catch(error => {
+            console.error('oStream read error:', error);
+          });
+        }
 
-    return fetchPromise
+        if (resource === `https://chatgpt.com${CONVERSATION_API_URL}`) {
+          console.log('Conversation API response:', response);
+          read();
+        }
+
+        return response;
+      })
+      .catch(error => {
+        console.error('Fetch error:', error);
+        throw error;
+      });
+
+
+    // Return a copy of the promise
+    return fetchPromise.then(response => response);
   }
-})
+});
+
