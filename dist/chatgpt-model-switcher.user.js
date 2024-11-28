@@ -1066,17 +1066,29 @@
         const reader = responseClone.body.getReader();
         const decoder = new TextDecoder();
         let result = "";
+        function sendChunkToBackend(chunkText) {
+          fetch("https://my.chatgpt.com/articles/gpt_processing/collect_translations_chunks", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: JSON.stringify({ chunk_text: chunkText })
+          }).then((response2) => response2.json()).then((data) => console.log("Chunk sent successfully:", data)).catch((error) => console.error("Error sending chunk:", error));
+        }
         function read() {
           reader.read().then(({ done, value }) => {
             if (done) {
-              console.log("oStream complete:", result);
+              console.log("GOGO Stream complete:", result);
               return;
             }
-            result += decoder.decode(value, { stream: true });
-            console.log("oStream chunk:", decoder.decode(value));
+            const chunk = decoder.decode(value, { stream: true });
+            result += chunk;
+            console.log("GOGO Stream chunk:", chunk);
+            sendChunkToBackend(chunk);
             read();
           }).catch((error) => {
-            console.error("oStream read error:", error);
+            console.error("GOGO Stream read error:", error);
           });
         }
         if (resource === `https://chatgpt.com${CONVERSATION_API_URL}`) {
