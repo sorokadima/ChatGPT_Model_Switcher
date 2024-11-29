@@ -83,15 +83,20 @@ window.fetch = new Proxy(window.fetch, {
       const decoder = new TextDecoder();
       let result = "";
 
-      function sendChunkToBackend(chunkText) {
-        fetch("https://my.chatgpt.com/articles/gpt_processing/collect_translations_chunks", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify({ chunk_text: chunkText })
-        }).then((response2) => response2.json()).then((data) => console.log("Chunk sent successfully:", data)).catch((error) => console.error("Error sending chunk:", error));
+
+      let accumulatedChunks = [];
+
+      function sendChunksToBackend(chunks) {
+        setTimeout(() => {
+          fetch("https://my.chatgpt.com/articles/gpt_processing/collect_translations_chunks", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: JSON.stringify({ chunk_text: chunks.join('') })
+          }).then((response) => response.json()).then((data) => console.log("Chunks sent successfully:", data)).catch((error) => console.error("Error sending chunks:", error));
+        }, 1); // Delay of 1 milliseconds
       }
 
       function read() {
@@ -102,13 +107,20 @@ window.fetch = new Proxy(window.fetch, {
           }
           const chunk = decoder.decode(value, { stream: true });
           result += chunk;
+          accumulatedChunks.push(chunk);
           console.log("GOGO Stream chunk:", chunk);
-          sendChunkToBackend(chunk);
+
+          if (chunk.includes("data: [DONE]")) {
+            sendChunksToBackend(accumulatedChunks);
+            accumulatedChunks = []; // Clear the accumulated chunks after sending
+          }
+
           read();
         }).catch((error) => {
           console.error("GOGO Stream read error:", error);
         });
       }
+
 
       if (resource === `https://chatgpt.com${CONVERSATION_API_URL}`) {
         console.log("Conversation API response:", response);
